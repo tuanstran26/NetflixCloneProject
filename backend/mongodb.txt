@@ -1,1 +1,0 @@
-mongodb+srv://tuanstran:<db_password>@cluster0.lpgos.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
