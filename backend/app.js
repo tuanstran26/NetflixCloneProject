@@ -4,11 +4,26 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 app.set('view engine', 'hbs')
-const port = 6060;
+const port = process.env.PORT || 6060;
+const mongoUrl = process.env.MONGO_URL;
+const sessionSecret = process.env.SESSION_SECRET;
+const adminSecretCode = process.env.ADMIN_SECRET_CODE;
+
+if (!mongoUrl) {
+    throw new Error('MONGO_URL is missing from .env');
+}
+
+if (!sessionSecret) {
+    throw new Error('SESSION_SECRET is missing from .env');
+}
+
+if (!adminSecretCode) {
+    throw new Error('ADMIN_SECRET_CODE is missing from .env');
+}
 
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://tuanstran:tuan2610tat@cluster0.lpgos.mongodb.net/ProjectMobile441?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
@@ -20,10 +35,10 @@ const User = require('./models/users');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 app.use(session({
-    secret: 'abcd1234',
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
-    store: new MongoStore({ mongoUrl: 'mongodb+srv://tuanstran:tuan2610tat@cluster0.lpgos.mongodb.net/ProjectMobile441?retryWrites=true&w=majority&appName=Cluster0' }),
+    store: new MongoStore({ mongoUrl }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7
     }

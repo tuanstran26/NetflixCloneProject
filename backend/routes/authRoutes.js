@@ -80,7 +80,7 @@ router.post('/admin/register', async (req, res) => {
     try {
 
         const secretCode = req.body.secretCode;
-        if (secretCode !== 'whatsup') {
+        if (secretCode !== process.env.ADMIN_SECRET_CODE) {
             return res.render('adminRegister', { errorMessage: 'Invalid code.' });
         }
 
